@@ -1,0 +1,113 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEditor;
+[System.Serializable]
+public class Lote : MonoBehaviour {
+
+    [SerializeField] public Config_Lote configuracion;
+    private Area area; 
+    Transform myTransform;
+    public Vector3 pos;
+    public Vector3 escala;   
+    public void Init(Area area, int numero)
+    {
+        myTransform = transform;
+        this.area = area;
+        pos = myTransform.localPosition;
+        escala = myTransform.localScale;
+        Config_Lote aux = ScriptableObject.CreateInstance<Config_Lote>();
+        aux.nombre = area.configuracion.nombre + "_" + numero.ToString();
+        //AssetDatabase.CreateAsset(aux, "Assets/Edificador/Configs/Lotes/Lote_" + aux.nombre + ".asset");
+        CreateAssetInFolder(aux, "Configs/Manzanas/Manzana_"+area.manzana.configuracion.nombre+"/Area_"+area.configuracion.nombre+"/Lote_"+aux.nombre, "Lote_" + aux.nombre);
+
+        AssetDatabase.SaveAssets();
+        configuracion = aux;
+        area.configuracion.lotes.Add(configuracion);
+        myTransform = transform;
+        configuracion.lote = GetComponent<Lote>();
+    }
+
+
+    public void CreateAssetInFolder(Object newAsset, string ParentFolder, string AssetName)
+    {
+        System.IO.DirectoryInfo dirInfo = new System.IO.DirectoryInfo(string.Format("{0}/{1}", Application.dataPath, ParentFolder));
+        dirInfo.Create();
+
+        AssetDatabase.CreateAsset(newAsset, string.Format("Assets/{0}/{1}.asset", ParentFolder, AssetName));
+    }
+
+    public void DisableChildren()
+    {
+        for (int i = 0; i < myTransform.childCount; i++)
+        {
+            myTransform.GetChild(i).gameObject.SetActive(false);
+        }
+    }
+
+    public void _Update()
+    {
+        
+
+        //Reseteo, si es tipo 1, se reseteo el hueco;
+        DisableChildren();
+        if (configuracion.tipo == Config_Lote.Tipo.TIPO1)
+        {
+            myTransform.GetChild(1).gameObject.SetActive(true);
+            ((modifyEdgeLoop)GetComponentInChildren(typeof(modifyEdgeLoop), true)).Reset();
+        }
+        else if (configuracion.tipo == Config_Lote.Tipo.BASICO)
+        {
+            myTransform.GetChild(0).gameObject.SetActive(true);
+        }
+
+        //Reseteo, se resetea la escala del lote.
+        Vector3 newScale = escala;
+        Vector3 newPos = pos;
+
+        myTransform.localPosition = newPos;
+        myTransform.localScale = newScale;
+
+        //Rotar
+        if (configuracion.rotate && configuracion.tipo==Config_Lote.Tipo.TIPO1)
+            ((modifyEdgeLoop)GetComponentInChildren(typeof(modifyEdgeLoop), true)).Rotate180();
+        else
+            ((modifyEdgeLoop)GetComponentInChildren(typeof(modifyEdgeLoop), true)).Rotate0();
+
+
+        //Actualizacion, se redimensiona el objeto segun la configuracion
+
+        float centro = area.manzana.configuracion.centroManzana;
+        if (Mathf.Abs(pos.x) - escala.x / 2 < centro / 2 && Mathf.Abs(pos.z) - escala.z / 2 < centro / 2)//centro de manzana
+        {
+            newScale.x = escala.x / 2 - centro / 2 + Mathf.Abs(pos.x);
+            newPos.x = (pos.x / Mathf.Abs(pos.x)) * (Mathf.Abs(pos.x) / 2 + centro / 4 + escala.x / 4);
+            if (newScale.x > escala.x)
+            {
+                newScale.x = escala.x;
+                newPos.x = pos.x;
+            }
+        }
+
+        //Actualizacion, se aplican los retiros
+        float retiro_total = configuracion.retiroFrente + configuracion.retiroFondo;
+        newScale.x -= retiro_total;
+        newPos.x += (pos.x / Mathf.Abs(pos.x))*(configuracion.retiroFondo - configuracion.retiroFrente) /2;
+
+        newScale.y = configuracion.altura;
+
+        myTransform.localPosition = newPos;
+        myTransform.localScale = newScale;
+
+        //Actualizacion, se mueven los loops para formar el nuevo hueco
+
+        if (configuracion.tipo == Config_Lote.Tipo.TIPO1)
+        {
+            ((modifyEdgeLoop)GetComponentInChildren(typeof(modifyEdgeLoop), true)).SetValues(configuracion.profundidad, configuracion.longitud);
+
+            ((modifyEdgeLoop)GetComponentInChildren(typeof(modifyEdgeLoop), true))._UpdateCarve();
+        }
+    }
+    
+
+}
