@@ -6,10 +6,10 @@ using UnityEditor;
 public class Lote : MonoBehaviour {
 
     [SerializeField] public Config_Lote configuracion;
-    private Area area; 
+    [SerializeField] public Area area; 
     Transform myTransform;
-    public Vector3 pos;
-    public Vector3 escala;   
+    private Vector3 pos;
+    private Vector3 escala;
     public void Init(Area area, int numero)
     {
         myTransform = transform;
@@ -42,6 +42,7 @@ public class Lote : MonoBehaviour {
         for (int i = 0; i < myTransform.childCount; i++)
         {
             myTransform.GetChild(i).gameObject.SetActive(false);
+            myTransform.GetChild(i).GetComponentInChildren<Renderer>().enabled = false;
         }
     }
 
@@ -54,11 +55,13 @@ public class Lote : MonoBehaviour {
         if (configuracion.tipo == Config_Lote.Tipo.TIPO1)
         {
             myTransform.GetChild(1).gameObject.SetActive(true);
+            myTransform.GetChild(1).GetComponentInChildren<Renderer>().enabled = true;
             ((modifyEdgeLoop)GetComponentInChildren(typeof(modifyEdgeLoop), true)).Reset();
         }
         else if (configuracion.tipo == Config_Lote.Tipo.BASICO)
         {
             myTransform.GetChild(0).gameObject.SetActive(true);
+            myTransform.GetChild(0).GetComponentInChildren<Renderer>().enabled = true;
         }
 
         //Reseteo, se resetea la escala del lote.

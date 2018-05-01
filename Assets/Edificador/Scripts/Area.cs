@@ -5,9 +5,9 @@ using UnityEditor;
 [System.Serializable]
 public class Area : MonoBehaviour {
     [SerializeField]public Config_Area configuracion;
-    public Manzana manzana;
-    public Lote[] lotes;
-    public Color color;
+    [SerializeField] public Manzana manzana;
+    [SerializeField] public Lote[] lotes;
+    [SerializeField] public Color color = Color.white;
     public void _Update()
     {
         foreach (Lote lote in lotes)

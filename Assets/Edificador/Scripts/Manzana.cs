@@ -7,9 +7,9 @@ public class Manzana : MonoBehaviour {
 
     [SerializeField] public Config_Manzana configuracion;
 
-    public Area[] areas = new Area[7];
+    [SerializeField] public Area[] areas = new Area[7];
 
-    public int indice;
+    [SerializeField] public int indice;
 
     public void _Update()
     {

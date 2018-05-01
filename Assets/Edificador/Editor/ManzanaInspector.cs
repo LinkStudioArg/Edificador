@@ -9,11 +9,11 @@ public class ManzanaInspector : ConfigInspector {
     private Config_Manzana config;
     static bool editorsCreated = false;
 
-    static int  indiceSeleccionArea = 0;
-    static int  indiceSeleccionLote = 0;
+     int  indiceSeleccionArea = 0;
+     int  indiceSeleccionLote = 0;
 
-    static Config_Area seleccionArea;
-    static Config_Lote seleccionLote;
+     Config_Area seleccionArea;
+     Config_Lote seleccionLote;
     private static readonly string[] _dontIncludeMe = new string[] { "m_Script" };
 
     private void OnEnable()

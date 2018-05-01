@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 public class Edificador:MonoBehaviour {
 
-	public List<Manzana> manzanas = new List<Manzana>();
+    [SerializeField] public List<Manzana> manzanas = new List<Manzana>();
 
     public void Init()
     {
@@ -19,6 +19,10 @@ public class Edificador:MonoBehaviour {
         Manzana manzana = nuevaManzana.GetComponent<Manzana>();
         manzana.Init(manzanas.Count+1);
         manzanas.Add(manzana);
+    }
+    [ContextMenu("Save")]
+    public void Save()
+    {
     }
     
 }
