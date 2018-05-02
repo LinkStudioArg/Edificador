@@ -13,6 +13,7 @@ public class Edificador:MonoBehaviour {
 
     public void CrearManzana(int numero)
     {
+
         GameObject prefab = (GameObject)Resources.Load("Manzana");
 
         GameObject nuevaManzana = Instantiate<GameObject>(prefab, this.transform);

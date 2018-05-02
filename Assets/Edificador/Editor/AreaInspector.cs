@@ -6,16 +6,12 @@ using UnityEditor;
 
 public class AreaInspector : Editor
 {
-    private static readonly string[] _dontIncludeMe = new string[] { "m_Script" };
 
-    private bool folded = false;
     private Area area;
-    bool editorsCreated = false;
 
     private void OnEnable()
     {
         area = (Area)target;
-        editorsCreated = false;
     }
 
     public override void OnInspectorGUI()

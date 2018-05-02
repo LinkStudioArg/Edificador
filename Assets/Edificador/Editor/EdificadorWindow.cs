@@ -5,7 +5,7 @@ using UnityEditor;
 public class EdificadorWindow : EditorWindow {
 
     static Edificador edificador;
-    [MenuItem("Window/Edificador")]
+    [MenuItem("Edificador/Crear Edificador",priority = 22, validate = false)]
 	public static void ShowWindow()
     {
         edificador = new GameObject("Edificador").AddComponent<Edificador>();

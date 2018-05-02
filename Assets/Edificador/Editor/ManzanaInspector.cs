@@ -4,22 +4,17 @@ using UnityEngine;
 using UnityEditor;
 [CustomEditor(typeof(Manzana))]
 public class ManzanaInspector : Editor {
-    private static Vector2 scroll = Vector2.zero;
-    private static bool folded = false;
     private Manzana manzana;
-    static bool editorsCreated = false;
 
     static int  indiceSeleccionArea = 0;
     static int indiceSeleccionLote = 0;
 
     static Area seleccionArea;
     static Lote seleccionLote;
-    private static readonly string[] _dontIncludeMe = new string[] { "m_Script" };
 
     private void OnEnable()
     {
         manzana = (Manzana)target;
-        editorsCreated = false;
     }
 
     public override void OnInspectorGUI()

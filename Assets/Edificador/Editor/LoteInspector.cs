@@ -6,9 +6,7 @@ using UnityEditor;
 
 public class LoteInspector : Editor
 {
-    private static readonly string[] _dontIncludeMe = new string[] { "m_Script" };
 
-    private  bool folded = false;
     private Lote lote;
     private void OnEnable()
     {

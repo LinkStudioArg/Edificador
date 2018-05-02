@@ -21,14 +21,7 @@ public class StartUpAssetImporter {
 
     }
 
-    static List<string> Files;
-    public static void Init()
-    {
-        foreach (string info in Files)
-        {
-            AssetDatabase.ImportPackage(info, false);
-        }
-    }
+
     [MenuItem("Packages/Move StartUp Assets", false, 23)]
 
     static void Move()
