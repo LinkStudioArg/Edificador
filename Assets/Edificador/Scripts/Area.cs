@@ -11,11 +11,7 @@ public class Area : MonoBehaviour {
     {
         foreach (Lote lote in lotes)
         {
-            Renderer[] rends = lote.GetComponentsInChildren<Renderer>();
-            foreach (var rend in rends)
-            {
-                rend.sharedMaterial.color = configuracion.color;
-            }
+            
             if (lote.configuracion.excluir == false)
             {
                 lote.configuracion.tipo = configuracion.tipo;

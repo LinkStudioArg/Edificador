@@ -27,7 +27,6 @@ public class Lote : MonoBehaviour {
         area.configuracion.lotes.Add(configuracion);
         ((modifyEdgeLoop)GetComponentInChildren(typeof(modifyEdgeLoop), true)).parentTransform = null;
         ((modifyEdgeLoop)GetComponentInChildren(typeof(modifyEdgeLoop), true)).Init() ;
-
     }
 
 

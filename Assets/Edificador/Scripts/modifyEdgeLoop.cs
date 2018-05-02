@@ -108,6 +108,8 @@ public void Rotate0()
         prevXTrans_2 = -mov / 2;
 
         obj.TranslateVertices(obj.SelectedTriangles, -2 * translacion / parentTransform.localScale.x);
+
+        GetComponent<Renderer>().material = parentTransform.GetChild(0).GetComponent<Renderer>().material;
     }
 
     [ContextMenu("Reset")]
