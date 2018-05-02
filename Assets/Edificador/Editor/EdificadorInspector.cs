@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 [CustomEditor(typeof(Edificador))]
-public class EdificadorInspector : Editor {
+public class EdificadorInspector : Editor
+{
     Edificador edificador;
     public override void OnInspectorGUI()
     {
@@ -15,10 +16,10 @@ public class EdificadorInspector : Editor {
         }
         foreach (var manzana in edificador.manzanas)
         {
-            CreateEditor(manzana.configuracion).OnInspectorGUI();              
+            CreateEditor(manzana).OnInspectorGUI();              
         }
         // DrawDefaultInspector();
-        EditorUtility.SetDirty(target);
+        EditorUtility.SetDirty(edificador);
 
     }
 

@@ -7,12 +7,13 @@ public class Lote : MonoBehaviour {
 
     [SerializeField] public Config_Lote configuracion;
     [SerializeField] public Area area; 
-    Transform myTransform;
-    private Vector3 pos;
-    private Vector3 escala;
+    public Transform myTransform;
+    public Vector3 pos;
+    public Vector3 escala;
     public void Init(Area area, int numero)
     {
         myTransform = transform;
+
         this.area = area;
         pos = myTransform.localPosition;
         escala = myTransform.localScale;
@@ -24,8 +25,9 @@ public class Lote : MonoBehaviour {
         AssetDatabase.SaveAssets();
         configuracion = aux;
         area.configuracion.lotes.Add(configuracion);
-        myTransform = transform;
-        configuracion.lote = GetComponent<Lote>();
+        ((modifyEdgeLoop)GetComponentInChildren(typeof(modifyEdgeLoop), true)).parentTransform = null;
+        ((modifyEdgeLoop)GetComponentInChildren(typeof(modifyEdgeLoop), true)).Init() ;
+
     }
 
 
@@ -41,26 +43,24 @@ public class Lote : MonoBehaviour {
     {
         for (int i = 0; i < myTransform.childCount; i++)
         {
-            myTransform.GetChild(i).gameObject.SetActive(false);
             myTransform.GetChild(i).GetComponentInChildren<Renderer>().enabled = false;
         }
     }
 
     public void _Update()
     {
-        
+        if (myTransform == null)
+            myTransform = transform;
 
         //Reseteo, si es tipo 1, se reseteo el hueco;
         DisableChildren();
         if (configuracion.tipo == Config_Lote.Tipo.TIPO1)
         {
-            myTransform.GetChild(1).gameObject.SetActive(true);
             myTransform.GetChild(1).GetComponentInChildren<Renderer>().enabled = true;
             ((modifyEdgeLoop)GetComponentInChildren(typeof(modifyEdgeLoop), true)).Reset();
         }
         else if (configuracion.tipo == Config_Lote.Tipo.BASICO)
         {
-            myTransform.GetChild(0).gameObject.SetActive(true);
             myTransform.GetChild(0).GetComponentInChildren<Renderer>().enabled = true;
         }
 
@@ -72,10 +72,10 @@ public class Lote : MonoBehaviour {
         myTransform.localScale = newScale;
 
         //Rotar
-        if (configuracion.rotate && configuracion.tipo==Config_Lote.Tipo.TIPO1)
-            ((modifyEdgeLoop)GetComponentInChildren(typeof(modifyEdgeLoop), true)).Rotate180();
+        if (configuracion.rotate && configuracion.tipo == Config_Lote.Tipo.TIPO1)
+            myTransform.GetChild(1).localRotation = Quaternion.Euler(0, 180, 0);
         else
-            ((modifyEdgeLoop)GetComponentInChildren(typeof(modifyEdgeLoop), true)).Rotate0();
+            myTransform.GetChild(1).localRotation = Quaternion.Euler(0, 0, 0);
 
 
         //Actualizacion, se redimensiona el objeto segun la configuracion
@@ -84,7 +84,12 @@ public class Lote : MonoBehaviour {
         if (Mathf.Abs(pos.x) - escala.x / 2 < centro / 2 && Mathf.Abs(pos.z) - escala.z / 2 < centro / 2)//centro de manzana
         {
             newScale.x = escala.x / 2 - centro / 2 + Mathf.Abs(pos.x);
-            newPos.x = (pos.x / Mathf.Abs(pos.x)) * (Mathf.Abs(pos.x) / 2 + centro / 4 + escala.x / 4);
+
+            if (pos.x != 0f)
+                newPos.x = (pos.x / Mathf.Abs(pos.x)) * (Mathf.Abs(pos.x) / 2 + centro / 4 + escala.x / 4); 
+            else
+                newPos.x = (Mathf.Abs(pos.x) / 2 + centro / 4 + escala.x / 4);
+
             if (newScale.x > escala.x)
             {
                 newScale.x = escala.x;
@@ -95,8 +100,10 @@ public class Lote : MonoBehaviour {
         //Actualizacion, se aplican los retiros
         float retiro_total = configuracion.retiroFrente + configuracion.retiroFondo;
         newScale.x -= retiro_total;
-        newPos.x += (pos.x / Mathf.Abs(pos.x))*(configuracion.retiroFondo - configuracion.retiroFrente) /2;
-
+        if(pos.x!=0f)
+            newPos.x += (pos.x / Mathf.Abs(pos.x))*(configuracion.retiroFondo - configuracion.retiroFrente) /2;
+        else
+            newPos.x+= (configuracion.retiroFondo - configuracion.retiroFrente) / 2;
         newScale.y = configuracion.altura;
 
         myTransform.localPosition = newPos;

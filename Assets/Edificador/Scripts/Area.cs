@@ -6,13 +6,16 @@ using UnityEditor;
 public class Area : MonoBehaviour {
     [SerializeField]public Config_Area configuracion;
     [SerializeField] public Manzana manzana;
-    [SerializeField] public Lote[] lotes;
-    [SerializeField] public Color color = Color.white;
+    public Lote[] lotes;
     public void _Update()
     {
         foreach (Lote lote in lotes)
         {
-            
+            Renderer[] rends = lote.GetComponentsInChildren<Renderer>();
+            foreach (var rend in rends)
+            {
+                rend.sharedMaterial.color = configuracion.color;
+            }
             if (lote.configuracion.excluir == false)
             {
                 lote.configuracion.tipo = configuracion.tipo;
@@ -21,6 +24,14 @@ public class Area : MonoBehaviour {
                 lote.configuracion.altura = configuracion.altura;
                 lote.configuracion.retiroFrente = configuracion.retiroFrente;
                 lote.configuracion.retiroFondo = configuracion.retiroFondo;
+
+                lote.configuracion.retiroFondoAleatorio = configuracion.retiroFondoAleatorio;
+                lote.configuracion.retiroFrenteAleatorio = configuracion.retiroFrenteAleatorio;
+                lote.configuracion.alturaAleatorio = configuracion.alturaAleatorio;
+                lote.configuracion.alturaRPT = configuracion.alturaRPT;
+                lote.configuracion.retiroFondoRPT = configuracion.retiroFondoRPT;
+                lote.configuracion.retiroFrenteRPT = configuracion.retiroFrenteRPT;
+
                 lote.configuracion.rotate = configuracion.rotate;
                 if (configuracion.alturaRPT)
                     lote.configuracion.altura = Random.Range(configuracion.alturaAleatorio.x, configuracion.alturaAleatorio.y);                
@@ -28,8 +39,9 @@ public class Area : MonoBehaviour {
                     lote.configuracion.retiroFrente = Random.Range(configuracion.retiroFrenteAleatorio.x, configuracion.retiroFrenteAleatorio.y);
                 if(configuracion.retiroFondoRPT)
                     lote.configuracion.retiroFondo = Random.Range(configuracion.retiroFondoAleatorio.x, configuracion.retiroFondoAleatorio.y);
+                lote._Update();
+
             }
-            lote._Update();
 
         }
     }
@@ -45,11 +57,14 @@ public class Area : MonoBehaviour {
         //AssetDatabase.CreateAsset(aux, "Assets/Edificador/Configs/Areas/Area_" + aux.nombre + ".asset");
         AssetDatabase.SaveAssets();
         configuracion = aux;
-        configuracion.area = GetComponent<Area>();
 
         manzana.configuracion.areas[numero] = configuracion;
+
+        Lote[] children = GetComponentsInChildren<Lote>();
+
         for (int i = 0; i < lotes.Length; i++)
         {
+            lotes[i] = children[i];
             lotes[i].Init(this, i);
             configuracion.nombresLotes.Add("Lote_" + manzana.configuracion.nombre + "_" +i);
 

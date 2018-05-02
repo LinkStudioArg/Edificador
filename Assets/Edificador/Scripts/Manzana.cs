@@ -24,15 +24,25 @@ public class Manzana : MonoBehaviour {
                 area.configuracion.retiroFrente = configuracion.retiroFrente;
                 area.configuracion.retiroFondo = configuracion.retiroFondo;
                 area.configuracion.rotate = configuracion.rotate;
+
+                area.configuracion.retiroFondoAleatorio = configuracion.retiroFondoAleatorio;
+                area.configuracion.retiroFrenteAleatorio = configuracion.retiroFrenteAleatorio;
+                area.configuracion.alturaAleatorio = configuracion.alturaAleatorio;
+                area.configuracion.alturaRPT = configuracion.alturaRPT;
+                area.configuracion.retiroFondoRPT = configuracion.retiroFondoRPT;
+                area.configuracion.retiroFrenteRPT = configuracion.retiroFrenteRPT;
+
                 if (configuracion.alturaRPT)
                     area.configuracion.altura = Random.Range(configuracion.alturaAleatorio.x, configuracion.alturaAleatorio.y);
                 if (configuracion.retiroFrenteRPT)
                     area.configuracion.retiroFrente = Random.Range(configuracion.retiroFrenteAleatorio.x, configuracion.retiroFrenteAleatorio.y);
                 if (configuracion.retiroFondoRPT)
                     area.configuracion.retiroFondo = Random.Range(configuracion.retiroFondoAleatorio.x, configuracion.retiroFondoAleatorio.y);
+
+                area._Update();
+
             }
-            
-            area._Update();
+
         }
     }
 
@@ -47,8 +57,12 @@ public class Manzana : MonoBehaviour {
         AssetDatabase.SaveAssets();
         configuracion = manzana;
         configuracion.manzana = GetComponent<Manzana>();
+
+        Area[] children = GetComponentsInChildren<Area>();
+
         for (int i = 0; i < 7; i++)
         {
+            areas[i] = children[i];
             areas[i].Init(this, i);
             configuracion.nombreAreas[i] = "Area_" + configuracion.nombre + "_" + i;
 

@@ -52,7 +52,24 @@ public void Rotate0()
 {
     transform.parent.rotation = Quaternion.Euler(0, 0, 0);
 }
-[ContextMenu("Get Selection")]
+    [ContextMenu("Get Depth")]
+    public void getDepth() {
+        obj.SetSelectedEdges(depthLoop);
+
+    }
+    [ContextMenu("Get loop1")]
+    public void getloop1()
+    {
+        obj.SetSelectedEdges(longLoop_1);
+
+    }
+    [ContextMenu("Get loop2")]
+    public void getloop2()
+    {
+        obj.SetSelectedEdges(longLoop_2);
+
+    }
+
     public void _UpdateCarve()
     {
         Init();
@@ -91,8 +108,6 @@ public void Rotate0()
         prevXTrans_2 = -mov / 2;
 
         obj.TranslateVertices(obj.SelectedTriangles, -2 * translacion / parentTransform.localScale.x);
-
-
     }
 
     [ContextMenu("Reset")]
